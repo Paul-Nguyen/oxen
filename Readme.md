@@ -8,11 +8,13 @@ Oxygen Enterprise (oxygencloud.com) doesn't correct errors very well. This uses 
 What Do I need
 --------------
 - An Oxygen API key. An Oxygen Admin can ask for one of these. Drop these in a .api file in the current directory, in a text file in form:
---*KEY:somekeyhere019i234123341
---*SECRET:somesecrethere98209820982098
+
+         KEY:somekeyhere019i234123341
+         SECRET:somesecrethere98209820982098
 - An Oxygen API username/password. You set this for your username via My Applications in the Oxygen webministration page. Drop it in a plain text file in the form:
---*id:youruserid@youraddress.example.com
---*password:yourpasswordhere
+
+         id:youruserid@youraddress.example.com
+         password:yourpasswordhere
 - This is in Python 3. Use Python 3.
 - Some python modules. Specifically hmac is the most obscure one. Check out the requirements.txt file.
 
