@@ -281,11 +281,13 @@ def iterSpace(OxRest, LocalOx, curfolder):
                     '.oxygenreserved',
                     'Desktop.ini',
                     'desktop.ini',
+                    'Thumbs.db',
                     'DS_Store' }
 
     all_missing_localfiles = dict()
     all_missing_remotefileparents = []
     all_filemismatch = []
+    all_filemismatchparents = []
 
     myspace = next((d for d in OxRest.spaces if d['name'] == curfolder), None)
     # Raise error if no space matches! TODO
@@ -327,7 +329,7 @@ def iterSpace(OxRest, LocalOx, curfolder):
         log.debug("%s> #file(s): Local %s, Remote %s", dirname, len(local_filenames), len(remote_filenames))
 
         # Taking filenames (list of local files), comparing with remote_filenames (dict of remote files)
-        missing_localfiles = [d.get('name') for d in remotels.get('files') if d.get('name') not in local_filenames and d.get('name') + '.cloudx' not in local_filenames]
+        missing_localfiles = [d.get('name') for d in remotels.get('files') if d.get('name') not in local_filenames and d.get('name') + '.cloudx' not in local_filenames and not d.get('name').startswith('~$') and not d.get('name').endswith('.tmp')]
         missing_localfiles = list(set(missing_localfiles) - file_ignore)
 
         ## But these can be cloudx files, let's edit those out
@@ -337,7 +339,7 @@ def iterSpace(OxRest, LocalOx, curfolder):
         #        raise Exception
 
         if len(missing_localfiles):
-            log.error("%s>local filenames missing %s", dirname, missing_localfiles)
+            log.error("%s>local files missing on remote %s", dirname, missing_localfiles)
 
         # Now other way around, looking for missing remote files
         missing_remotefiles = list(set(local_filenames) - set(remote_filenames.keys()) - file_ignore)
@@ -377,14 +379,18 @@ def iterSpace(OxRest, LocalOx, curfolder):
             if flsize != frsize:
                 log.error("%s>File size of %s: Local %s and Remote %s differs", dirname, file, flsize, frsize)
                 all_filemismatch.append(file)
+                if dirname not in all_missing_remotefileparents:
+                    all_filemismatchparents.append(dirname)
             if flts != frts:
                 log.error("%s>File timestamp of %s: Local %s and Remote %s differs", dirname, file, flts, frts)
                 all_filemismatch.append(file)
+                if dirname not in all_missing_remotefileparents:
+                    all_filemismatchparents.append(dirname)
 
 
         #DEBUG:{'folders': [{'seq': 1, 'name': '__adirname__', 'type': 'folder'}], 'files': [{'size': __integersize__, 'name': '__filename.ext__', 'seq': __integersequencenumber__, 'contentId': '12345678-90ab-cde1-2345-6789abcde012', 'modified': 1425428689}]}
 
-    return all_missing_remotefileparents, all_missing_localfiles, all_filemismatch
+    return all_missing_remotefileparents, all_missing_localfiles, all_filemismatch, all_filemismatchparents
 
 def fix_missing_remotefiles(localox, missing_remotefileparents):
     """Given a list of dirs, try to 'fix' it. Oxygen remote may be missing things """
@@ -398,7 +404,8 @@ def fix_missing_remotefiles(localox, missing_remotefileparents):
 
     for dirname in missing_remotefileparents:
         log.error("Trying to autofix %s", dirname)
-        os.utime(dirname)
+        # Simply updating timestamp of dir doesn't work
+        #os.utime(dirname)
         if (os.path.isfile(dirname + '/.paulnguyenfix')):
             try:
                 os.remove(dirname + '/.paulnguyenfix')
@@ -440,9 +447,11 @@ def main():
 
     for d in oxrest.spaces:
         log.info("Checking space %s", d.get("name"))
-        mrf, mlf, mcf = iterSpace(oxrest, localox, d.get("name"))
+        mrf, mlf, mcf, mcmmp = iterSpace(oxrest, localox, d.get("name"))
         if (args.fix and len(mrf)):
             fix_missing_remotefiles(localox, mrf)
+        if (args.fix and len(mcmmp)):
+            fix_missing_remotefiles(localox, mcmmp)
 
 
 if __name__ == '__main__':
