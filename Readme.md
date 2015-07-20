@@ -1,9 +1,11 @@
-Oxen
+Toed
 ====
 
 What is this
 ------------
-Oxygen Enterprise (oxygencloud.com) doesn't correct errors very well. This uses the Oxygen REST API to check your local dir against the remote, e.g. it will tell you if there are differences between what is synced on your hard drive with what is on the servers.
+Tool for Oxygen Enterprise Diagnosis.
+
+Oxygen Enterprise (oxygencloud.com) doesn't correct errors very well, and has not for a long time. This tool uses the Oxygen REST API to check your local dir against the remote, e.g. it will tell you if there are differences between what is synced on your hard drive with what is on the servers. If users already have an API acccount, then rolling this out as a support tool would be easy and worth while, but it's not, so it's more of a tool that I used to get my own Oxygen Cloud account synced properly before I decommissioned my laptop.
 
 What Do I need
 --------------
@@ -11,7 +13,7 @@ What Do I need
 
          KEY:somekeyhere019i234123341
          SECRET:somesecrethere98209820982098
-- An Oxygen API username/password. You set this for your username via My Applications in the Oxygen webministration page. Drop it in a plain text file in the form:
+- An Oxygen API username/password. You set this for your username via My Applications in the Oxygen webministration page. Drop it in a plain text file named '.user' in the form:
 
          id:youruserid@youraddress.example.com
          password:yourpasswordhere
@@ -22,6 +24,9 @@ This was also whipped up on a WINDOWS box. So beware windows-isms.
 
 How Do I use it
 ---------------
+Setup your .api and .user as above.
+        
+        ./toed
 Running it will go through your spaces, directories, then files and error to screen if there are discrepancies.
 
 Discrepancy types:
@@ -38,7 +43,11 @@ Running it with --verbose will show you that it's actually doing something.
 
 Running it with --debug tells all.
 
-There is a setup.py file -- run as python setup.py build2exe if you want to generate a windows dist/ and executable.
+Deploy binary
+-------------
+There was intention to deploy this via windows with a dist/exe but that depends on rolling out of API accounts and has been messy. 
+
+So in the meantime, there is enough there to start it but this has not been field tested. There is a setup.py file -- run as python setup.py build2exe if you want to generate a windows dist/ and executable.
 
 Don't sue me because
 --------------------
