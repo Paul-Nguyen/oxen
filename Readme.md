@@ -3,7 +3,7 @@ Toed
 
 What is this
 ------------
-Tool for Oxygen Enterprise Diagnosis.
+**T**ool for **O**xygen **E**nterprise **D**iagnosis.
 
 Oxygen Enterprise (oxygencloud.com) doesn't correct sync issue errors very well, and has not for a long time. This tool uses the Oxygen REST API to check your local dir against the remote, e.g. it will tell you if there are differences between what is synced on your hard drive with what is on the servers. If users already have an API acccount, then rolling this out as a support tool would be easy and worth while, but it's not, so it's more of a tool that I used to get my own Oxygen Cloud account synced properly before I decommissioned my laptop.
 
