@@ -5,7 +5,13 @@ What is this
 ------------
 Tool for Oxygen Enterprise Diagnosis.
 
-Oxygen Enterprise (oxygencloud.com) doesn't correct errors very well, and has not for a long time. This tool uses the Oxygen REST API to check your local dir against the remote, e.g. it will tell you if there are differences between what is synced on your hard drive with what is on the servers. If users already have an API acccount, then rolling this out as a support tool would be easy and worth while, but it's not, so it's more of a tool that I used to get my own Oxygen Cloud account synced properly before I decommissioned my laptop.
+Oxygen Enterprise (oxygencloud.com) doesn't correct sync issue errors very well, and has not for a long time. This tool uses the Oxygen REST API to check your local dir against the remote, e.g. it will tell you if there are differences between what is synced on your hard drive with what is on the servers. If users already have an API acccount, then rolling this out as a support tool would be easy and worth while, but it's not, so it's more of a tool that I used to get my own Oxygen Cloud account synced properly before I decommissioned my laptop.
+
+Discrepancy types:
+- Files exist locally, but aren't on server. We can 'bump' the folder by placing or deleting a file here and forcing Oxygen to reread the directory. This has solved directory sync issues where files have not been uploaded from a folder for months. But this won't help if "~$blah.docx" and "*.tmp" files are the ones missing, since Oxygen ignores these. Perhaps these should just be flagged as errors.
+- Files exist remotely, but aren't here locally. These are just flagged and output as errors.
+- Files exist on both, but timestamps don't line up. These are just flagged and output as errors.
+- Files exist on both, but filesizes don't line up. These are just flagged and output as errors.
 
 What Do I need
 --------------
@@ -29,15 +35,7 @@ Setup your .api and .user as above.
         ./toed.py
 Running it will go through your spaces, directories, then files and error to screen if there are discrepancies.
 
-Discrepancy types:
-- Files exist locally, but aren't on server
-- Files exist remotely, but aren't here locally
-- Files exist on both, but timestamps don't line up
-- Files exist on both, but filesizes don't line up
-
-Running it with -f or --fix will attempt to fix things when remote files are missing. But this won't help if "~$blah.docx" and "*.tmp" files are the ones missing, since Oxygen ignores these. Only use after a non -f dry run I guess.
-
-Potentially a -f type fix might work with timestamp/filesize issues, but there is a danger here of overwriting good commits and I ran out of time to think about it.
+Running it with -f or --fix will attempt to fix things when remote files are missing. Potentially a -f type fix might work with timestamp/filesize issues, but there is a danger here of overwriting good commits and I ran out of time to think about it.
 
 Running it with --verbose will show you that it's actually doing something.
 
