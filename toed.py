@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import re, os, sys, argparse, time, hmac, hashlib, base64
 import logging as log
 import traceback, json, requests
