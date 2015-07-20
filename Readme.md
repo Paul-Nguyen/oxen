@@ -26,7 +26,7 @@ How Do I use it
 ---------------
 Setup your .api and .user as above.
         
-        ./toed
+        ./toed.py
 Running it will go through your spaces, directories, then files and error to screen if there are discrepancies.
 
 Discrepancy types:
